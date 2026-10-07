@@ -22,7 +22,7 @@ export const steps: Record<StepId, StepContent> = {
       "Gross income is what you earn before anything is taken out. Take-home pay is what actually reaches your bank account.",
     why: "Lenders measure your payments against income they can verify on your tax documents.",
     how: "Open the paystub, compare the three figures, and pick the monthly income a lender uses.",
-    prompt: "Which income does the lender use?",
+   prompt: "Fill in the income line on the loan application by clicking a line on the paystub.",
     hint: "Lenders compare monthly payments to monthly income. Which monthly figure on the paystub is the one before anything is taken out?",
   },
   bills: {
@@ -79,10 +79,10 @@ export const incomeFeedback: Record<IncomeOption, { correct: boolean; text: stri
     correct: false,
     text: "Take-home pay is after taxes. Lenders use pre-tax income, so this understates what Maya earns and makes her DTI look worse than it is.",
   },
-  grossMonthly: {
-    correct: true,
-    text: "Right figure. Lenders use gross monthly income, before taxes.",
-  },
+ grossMonthly: {
+  correct: true,
+  text: "Lenders use gross monthly income, verified on your tax documents. They don't pick whichever number looks friendliest.",
+},
 }
 
 export const billsFeedback = {

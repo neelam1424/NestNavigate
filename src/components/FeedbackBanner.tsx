@@ -5,10 +5,10 @@ type Props = { correct: boolean; text: string; hint?: string }
 export default function FeedbackBanner({ correct, text, hint }: Props) {
   return (
     <Alert variant={correct ? "default" : "destructive"} role="status">
-      <AlertTitle>{correct ? "That works" : "Here's what happens"}</AlertTitle>
+      <AlertTitle>{correct ? "The lender accepts this" : "The lender pushes back"}</AlertTitle>
       <AlertDescription className="space-y-2">
         <p>{text}</p>
-        {hint && <p className="font-medium">Hint: {hint}</p>}
+        {hint && <p className="font-medium">Lender's note: {hint}</p>}
       </AlertDescription>
     </Alert>
   )

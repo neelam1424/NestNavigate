@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { maya } from "@/data/maya"
 import {
-  calcDti, getDtiZone, getGrossMonthly, getTakeHomeMonthly, sumDebts, leftoverCash,
+  incomeValue,calcDti, getDtiZone, getGrossMonthly, getTakeHomeMonthly, sumDebts, leftoverCash,
 } from "@/game/dti"
 
 const gross = getGrossMonthly(maya)
@@ -31,5 +31,15 @@ it("a new car loan pushes Home A over the line", () => {
 it("Home B leaves little cash", () => {
   expect(leftoverCash(maya, housing("a"))).toBe(1300)
   expect(leftoverCash(maya, housing("b"))).toBe(750)
+})
+it("exposes the figure behind each income option", () => {
+  expect(incomeValue(maya, "annual")).toBe(90000)
+  expect(incomeValue(maya, "takeHome")).toBe(5650)
+  expect(incomeValue(maya, "grossMonthly")).toBe(7500)
+})
+
+it("using take-home pay makes Home A look unaffordable", () => {
+  const dti = calcDti(debts, housing("a"), incomeValue(maya, "takeHome"))
+  expect(getDtiZone(dti)).toBe("hard")
 })
 })

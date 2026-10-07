@@ -1,4 +1,4 @@
-import type { Bill, Buyer, DtiZone } from "@/game/types"
+import type { Bill, Buyer, DtiZone, IncomeOption } from "@/game/types"
 
 export const sum = (nums: number[]) => nums.reduce((a, b) => a + b, 0)
 
@@ -40,3 +40,17 @@ export function leftoverCash(b: Buyer, housingPayment: number, extraDebt = 0) {
 }
 
 export const formatPercent = (ratio: number) => `${(ratio * 100).toFixed(1)}%`
+
+/** The dollar figure behind each income choice on the paystub. */
+export function incomeValue(b: Buyer, option: IncomeOption): number {
+  switch (option) {
+    case "annual": return b.grossAnnual
+    case "takeHome": return getTakeHomeMonthly(b)
+    case "grossMonthly": return getGrossMonthly(b)
+  }
+}
+
+const usd = new Intl.NumberFormat("en-US", {
+  style: "currency", currency: "USD", maximumFractionDigits: 0,
+})
+export const formatMoney = (n: number) => usd.format(n)

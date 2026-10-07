@@ -1,15 +1,16 @@
 import type { Dispatch } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+// import { Button } from "@/components/ui/button"
 import DtiGauge from "@/components/DtiGauge"
 import FeedbackBanner from "@/components/FeedbackBanner"
 import StepCard from "@/components/StepCard"
 import StepControls from "@/components/StepControls"
 import StepTracker from "@/components/StepTracker"
-import { incomeFeedback, incomeOptions, steps } from "@/data/content"
+import { incomeFeedback, steps } from "@/data/content"
 import type { Action, GameState } from "@/game/gameReducer"
 import { CAN_GIVE_UP, STEPS, getLiveDti, getTotalScore, hasGaugeData } from "@/game/gameReducer"
 import { isStepAnswered } from "@/game/rules"
+import PaystubStep from "@/components/PaystubStep"
 
 type Props = {
   game: GameState
@@ -50,24 +51,17 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
 
       <div className="space-y-4">
         <StepCard step={step}>
-          {/* TEMP: replaced by a real <PaystubStep /> next. Other steps are coming. */}
-          {step === "income" ? (
-            <div className="flex flex-wrap gap-2">
-              {incomeOptions.map((o) => (
-                <Button
-                  key={o.id}
-                  variant={choices.income === o.id ? "default" : "outline"}
-                  disabled={stage === "feedback"}
-                  onClick={() => dispatch({ type: "chooseIncome", option: o.id })}
-                >
-                  {o.label}
-                </Button>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">This step's interface is coming next.</p>
-          )}
-        </StepCard>
+  {step === "income" ? (
+    <PaystubStep
+      buyer={buyer}
+      selected={choices.income}
+      locked={stage === "feedback"}
+      onSelect={(option) => dispatch({ type: "chooseIncome", option })}
+    />
+  ) : (
+    <p className="text-sm text-muted-foreground">This step's interface is coming next.</p>
+  )}
+</StepCard>
 
         {stage === "feedback" && feedbackText && (
           <FeedbackBanner
