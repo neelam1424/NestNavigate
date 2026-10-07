@@ -1,14 +1,12 @@
 import type { Dispatch } from "react"
-import { Badge } from "@/components/ui/badge"
 import BillsStep from "@/components/BillsStep"
 import DtiGauge from "@/components/DtiGauge"
 import EventStep from "@/components/EventStep"
-import HouseStep from "@/components/HouseStep"
 import FeedbackBanner from "@/components/FeedbackBanner"
+import HouseStep from "@/components/HouseStep"
 import PaystubStep from "@/components/PaystubStep"
 import StepCard from "@/components/StepCard"
 import StepControls from "@/components/StepControls"
-import StepTracker from "@/components/StepTracker"
 import { mayaReactions, steps } from "@/data/content"
 import type { Action, GameState } from "@/game/gameReducer"
 import {
@@ -47,80 +45,87 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
     : hasGaugeData(game)
 
   return (
-    <main className="mx-auto grid max-w-5xl gap-6 p-6 md:grid-cols-[1fr_320px]">
-      <header className="space-y-4 md:col-span-2">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="text-xl font-bold">Maya's kitchen table</h1>
-          <div className="flex gap-2">
-            <Badge variant="outline">Score: {getTotalScore(game)}</Badge>
-            <Badge variant="outline">Rewinds: {game.totalRewinds}</Badge>
+    <>
+      <main className="mx-auto grid max-w-5xl gap-6 p-6 pb-24 md:grid-cols-[1fr_300px]">
+        <div className="space-y-4">
+          <StepCard step={step}>
+            {step === "income" && (
+              <PaystubStep
+                buyer={buyer}
+                selected={choices.income}
+                locked={stage === "feedback"}
+                onSelect={(option) => dispatch({ type: "chooseIncome", option })}
+              />
+            )}
+            {step === "bills" && (
+              <BillsStep
+                buyer={buyer}
+                billSort={choices.billSort}
+                locked={stage === "feedback"}
+                onSort={(billId, to) => dispatch({ type: "sortBill", billId, to })}
+              />
+            )}
+            {step === "house" && (
+              <HouseStep
+                buyer={buyer}
+                selectedId={choices.houseId}
+                locked={stage === "feedback"}
+                onSelect={(houseId) => dispatch({ type: "chooseHouse", houseId })}
+              />
+            )}
+            {step === "event" && choices.houseId && (
+              <EventStep
+                buyer={buyer}
+                houseId={choices.houseId}
+                accepted={choices.eventAccepted}
+                locked={stage === "feedback"}
+                onChoose={(accepted) => dispatch({ type: "chooseEvent", accepted })}
+              />
+            )}
+          </StepCard>
+
+          {feedback && feedback.text && (
+            <FeedbackBanner
+              correct={!!lastCorrect}
+              text={feedback.text}
+              hint={lastCorrect ? undefined : steps[step].hint}
+              mayaReaction={lastCorrect ? mayaReactions[step] : undefined}
+            />
+          )}
+
+          <StepControls
+            stage={stage}
+            correct={lastCorrect}
+            canSubmit={isStepAnswered(step, buyer, choices)}
+            canGiveUp={CAN_GIVE_UP.includes(step)}
+            isLastStep={isLastStep}
+            onSubmit={() => dispatch({ type: "submit" })}
+            onRewind={() => dispatch({ type: "rewind" })}
+            onNext={handleNext}
+            onGiveUp={handleGiveUp}
+          />
+        </div>
+
+        <aside className="space-y-4 md:sticky md:top-6 md:self-start">
+          <DtiGauge dti={gaugeDti} active={gaugeActive} reportDti={gaugeReportDti} />
+        </aside>
+      </main>
+
+      {/* Floating bottom dock */}
+      <div
+        aria-label="Game progress"
+        className="fixed bottom-0 left-0 right-0 border-t-2 border-foreground bg-background/95 backdrop-blur-sm"
+      >
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-2 font-mono text-xs">
+          <span>
+            Step {game.stepIndex + 1}/{STEPS.length}: {steps[step].title}
+          </span>
+          <div className="flex gap-4">
+            <span>Score: {getTotalScore(game)}</span>
+            <span>Rewinds: {game.totalRewinds}</span>
           </div>
         </div>
-        <StepTracker stepIndex={game.stepIndex} completed={game.stepPoints.length} />
-      </header>
-
-      <div className="space-y-4">
-        <StepCard step={step}>
-          {step === "income" && (
-            <PaystubStep
-              buyer={buyer}
-              selected={choices.income}
-              locked={stage === "feedback"}
-              onSelect={(option) => dispatch({ type: "chooseIncome", option })}
-            />
-          )}
-          {step === "bills" && (
-            <BillsStep
-              buyer={buyer}
-              billSort={choices.billSort}
-              locked={stage === "feedback"}
-              onSort={(billId, to) => dispatch({ type: "sortBill", billId, to })}
-            />
-          )}
-          {step === "house" && (
-            <HouseStep
-              buyer={buyer}
-              selectedId={choices.houseId}
-              locked={stage === "feedback"}
-              onSelect={(houseId) => dispatch({ type: "chooseHouse", houseId })}
-            />
-          )}
-          {step === "event" && choices.houseId && (
-            <EventStep
-              buyer={buyer}
-              houseId={choices.houseId}
-              accepted={choices.eventAccepted}
-              locked={stage === "feedback"}
-              onChoose={(accepted) => dispatch({ type: "chooseEvent", accepted })}
-            />
-          )}
-        </StepCard>
-
-        {feedback && feedback.text && (
-          <FeedbackBanner
-            correct={!!lastCorrect}
-            text={feedback.text}
-            hint={lastCorrect ? undefined : steps[step].hint}
-            mayaReaction={lastCorrect ? mayaReactions[step] : undefined}
-          />
-        )}
-
-        <StepControls
-          stage={stage}
-          correct={lastCorrect}
-          canSubmit={isStepAnswered(step, buyer, choices)}
-          canGiveUp={CAN_GIVE_UP.includes(step)}
-          isLastStep={isLastStep}
-          onSubmit={() => dispatch({ type: "submit" })}
-          onRewind={() => dispatch({ type: "rewind" })}
-          onNext={handleNext}
-          onGiveUp={handleGiveUp}
-        />
       </div>
-
-      <aside className="md:sticky md:top-6 md:self-start">
-        <DtiGauge dti={gaugeDti} active={gaugeActive} reportDti={gaugeReportDti} />
-      </aside>
-    </main>
+    </>
   )
 }

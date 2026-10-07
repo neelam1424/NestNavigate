@@ -7,6 +7,12 @@ import { POINTS_PER_STEP } from "@/game/scoring"
 
 type Props = { game: GameState; onRestart: () => void }
 
+const endingBorder: Record<string, string> = {
+  comfortable: "border-green-700",
+  "house-poor": "border-amber-500",
+  denied: "border-red-600",
+}
+
 export default function ResultScreen({ game, onRestart }: Props) {
   const ending = getEnding(game)
 
@@ -29,26 +35,29 @@ export default function ResultScreen({ game, onRestart }: Props) {
 
   return (
     <main className="mx-auto max-w-2xl space-y-6 p-6">
-      <div className="rounded border-2 p-6">
+      <div className={`rounded border-2 p-6 ${endingBorder[ending]}`}>
+        <p className="mb-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">Result</p>
         <h1 className="text-2xl font-bold">{e.title}</h1>
-        <p className="mt-2">{e.summary}</p>
+        <p className="mt-2 text-muted-foreground">{e.summary}</p>
         <p className="mt-3 font-medium">{e.takeaway}</p>
         <div className="mt-4 flex flex-wrap gap-4 font-mono text-sm">
-          <span>Score: {totalScore} / {maxScore}</span>
+          <span className="font-bold">Score: {totalScore} / {maxScore}</span>
           <span>Rewinds: {game.totalRewinds}</span>
           {leftover !== null && (
-            <span>Left each month: {formatMoney(leftover)}</span>
+            <span className={leftover < 1000 ? "text-amber-600" : "text-green-700"}>
+              Left each month: {formatMoney(leftover)}
+            </span>
           )}
         </div>
       </div>
 
       <div className="space-y-3">
-        <h2 className="font-semibold">What happened, step by step</h2>
+        <h2 className="font-mono text-xs font-bold uppercase tracking-widest">What happened</h2>
         {recaps.map((r) => (
-          <div key={r.step} className="rounded border px-4 py-3 text-sm">
-            <p className="font-medium">{steps[r.step].title}</p>
+          <div key={r.step} className="rounded border-2 px-4 py-3 text-sm">
+            <p className="font-semibold">{steps[r.step].title}</p>
             <p className="mt-0.5 text-muted-foreground">{r.decision}</p>
-            <p className="mt-1 font-mono text-xs">
+            <p className="mt-1 font-mono text-xs text-muted-foreground">
               DTI after this step: {formatPercent(r.dtiAfter)}
             </p>
           </div>
@@ -56,9 +65,9 @@ export default function ResultScreen({ game, onRestart }: Props) {
       </div>
 
       {house && (
-        <div className="rounded border px-4 py-3 text-sm">
-          <p className="font-semibold">Monthly budget breakdown</p>
-          <div className="mt-2 space-y-1 font-mono text-xs">
+        <div className="rounded border-2 px-4 py-4">
+          <p className="mb-3 font-mono text-xs font-bold uppercase tracking-widest">Monthly budget</p>
+          <div className="space-y-1.5 font-mono text-sm">
             <div className="flex justify-between">
               <span>Take-home pay</span>
               <span>{formatMoney(getTakeHomeMonthly(game.buyer))}</span>
@@ -72,10 +81,10 @@ export default function ResultScreen({ game, onRestart }: Props) {
               <span>- {formatMoney(house.housingPayment)}</span>
             </div>
             <div className="flex justify-between text-muted-foreground">
-              <span>Living costs</span>
-              <span>approx. - $1,700</span>
+              <span>Living costs (approx.)</span>
+              <span>- $1,700</span>
             </div>
-            <div className="flex justify-between border-t pt-1 font-bold">
+            <div className="flex justify-between border-t-2 pt-1.5 font-bold">
               <span>Left over</span>
               <span className={leftover !== null && leftover < 1000 ? "text-amber-600" : ""}>
                 {leftover !== null ? formatMoney(leftover) : "--"}
@@ -85,7 +94,7 @@ export default function ResultScreen({ game, onRestart }: Props) {
         </div>
       )}
 
-      <Button onClick={onRestart}>Play again</Button>
+      <Button onClick={onRestart} className="w-full sm:w-auto">Play again</Button>
       <p className="text-xs text-muted-foreground">{DISCLAIMER}</p>
     </main>
   )
