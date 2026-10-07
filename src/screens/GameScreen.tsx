@@ -2,6 +2,7 @@ import type { Dispatch } from "react"
 import { Badge } from "@/components/ui/badge"
 import BillsStep from "@/components/BillsStep"
 import DtiGauge from "@/components/DtiGauge"
+import EventStep from "@/components/EventStep"
 import HouseStep from "@/components/HouseStep"
 import FeedbackBanner from "@/components/FeedbackBanner"
 import PaystubStep from "@/components/PaystubStep"
@@ -84,8 +85,14 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
               onSelect={(houseId) => dispatch({ type: "chooseHouse", houseId })}
             />
           )}
-          {step === "event" && (
-            <p className="text-sm text-muted-foreground">This step's interface is coming next.</p>
+          {step === "event" && choices.houseId && (
+            <EventStep
+              buyer={buyer}
+              houseId={choices.houseId}
+              accepted={choices.eventAccepted}
+              locked={stage === "feedback"}
+              onChoose={(accepted) => dispatch({ type: "chooseEvent", accepted })}
+            />
           )}
         </StepCard>
 
