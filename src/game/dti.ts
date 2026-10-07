@@ -54,3 +54,8 @@ const usd = new Intl.NumberFormat("en-US", {
   style: "currency", currency: "USD", maximumFractionDigits: 0,
 })
 export const formatMoney = (n: number) => usd.format(n)
+
+/** Highest housing payment that keeps DTI at or below `limit`. For Maya: $2,375. */
+export function maxHousingPayment(b: Buyer, limit = APPROVAL_LIMIT): number {
+  return Math.floor(getGrossMonthly(b) * limit - sumDebts(b.bills))
+}
