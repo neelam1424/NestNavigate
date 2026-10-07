@@ -6,9 +6,10 @@ import FeedbackBanner from "@/components/FeedbackBanner"
 import StepCard from "@/components/StepCard"
 import StepControls from "@/components/StepControls"
 import StepTracker from "@/components/StepTracker"
-import { incomeFeedback, steps } from "@/data/content"
+import { steps } from "@/data/content"
 import type { Action, GameState } from "@/game/gameReducer"
 import { CAN_GIVE_UP, STEPS, getLiveDti, getTotalScore, hasGaugeData } from "@/game/gameReducer"
+import { getFeedback } from "@/game/feedback"
 import { isStepAnswered } from "@/game/rules"
 import PaystubStep from "@/components/PaystubStep"
 
@@ -32,9 +33,7 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
     onFinish()
   }
 
-  // TEMP: feedback text for the income step only; each real step supplies its own.
-  const feedbackText =
-    step === "income" && choices.income ? incomeFeedback[choices.income].text : ""
+  const feedback = stage === "feedback" ? getFeedback(step, buyer, choices) : null
 
   return (
     <main className="mx-auto grid max-w-5xl gap-6 p-6 md:grid-cols-[1fr_320px]">
@@ -63,10 +62,10 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
   )}
 </StepCard>
 
-        {stage === "feedback" && feedbackText && (
+        {feedback && feedback.text && (
           <FeedbackBanner
             correct={!!lastCorrect}
-            text={feedbackText}
+            text={feedback.text}
             hint={lastCorrect ? undefined : steps[step].hint}
           />
         )}
