@@ -3,31 +3,36 @@ export type Phase = "start" | "playing" | "result"
 
 export type DtiZone = "comfortable" | "stretching" | "hard"
 
-export type Withholding = {label: string; amount: number}
+export type StepId = "income" | "bills" | "house" | "event"
+export type IncomeOption = "annual" | "takeHome" | "grossMonthly"
+export type BillSort = "counts" | "ignored"
+export type Ending = "comfortable" | "house-poor" | "denied"
+
+
+export type Withholding = { label: string; amount: number }
 
 export type Bill = {
-    id: string
-    label: string
-    amount: number
-    countsForDti: boolean //true = debt a lender counts, false = everyday spending
-    why: string //shown in the "why" beat after the player sorts it
+  id: string
+  label: string
+  amount: number
+  countsForDti: boolean // true = debt a lender counts, false = everyday spending
+  why: string // shown in the "why" beat after the player sorts it
 }
 
 export type House = {
-    id: string
-    name: string
-    housingPayment: number
-    blurb: string
+  id: string
+  name: string
+  housingPayment: number
+  blurb: string
 }
 
 export type LifeEvent = {
-     id: string
+  id: string
   title: string
   description: string
   debtDelta: number // monthly change in debt payments
   lesson: string
 }
-
 
 export type Buyer = {
   name: string
@@ -38,7 +43,12 @@ export type Buyer = {
   lifeEvents: LifeEvent[]
 }
 
-
+export type Choices = {
+  income: IncomeOption | null
+  billSort: Record<string, BillSort>
+  houseId: string | null
+  eventAccepted: boolean | null
+}
 
 // example:-const buyer: Buyer = {
 //   name: "Maya",

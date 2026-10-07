@@ -1,6 +1,9 @@
 import type { Bill, Buyer, DtiZone } from "@/game/types"
 
-const sum = (nums: number[]) => nums.reduce((a, b) => a + b, 0)
+export const sum = (nums: number[]) => nums.reduce((a, b) => a + b, 0)
+
+export const COMFORT_LIMIT = 0.36
+export const APPROVAL_LIMIT = 0.43
 
 export const getGrossMonthly = (b: Buyer) => b.grossAnnual / 12
 
@@ -13,15 +16,15 @@ export const sumDebts = (bills: Bill[]) =>
 export const sumLivingCosts = (bills: Bill[]) =>
   sum(bills.filter((x) => !x.countsForDti).map((x) => x.amount))
 
-/** DTI as a ratio (0.433 = 43.3%): existing monthly debt + housing payment, divided by gross monthly income. */
+/** DTI as a ratio (0.433 = 43.3%). Simplified: housing payment only. */
 export function calcDti(monthlyDebt: number, housingPayment: number, grossMonthly: number) {
   if (grossMonthly <= 0) throw new Error("Gross monthly income must be positive")
   return (monthlyDebt + housingPayment) / grossMonthly
 }
 
 export function getDtiZone(dti: number): DtiZone {
-  if (dti < 0.36) return "comfortable"
-  if (dti <= 0.43) return "stretching"
+  if (dti < COMFORT_LIMIT) return "comfortable"
+  if (dti <= APPROVAL_LIMIT) return "stretching"
   return "hard"
 }
 
