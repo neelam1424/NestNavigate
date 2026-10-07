@@ -2,6 +2,7 @@ import type { Dispatch } from "react"
 import { Badge } from "@/components/ui/badge"
 import BillsStep from "@/components/BillsStep"
 import DtiGauge from "@/components/DtiGauge"
+import HouseStep from "@/components/HouseStep"
 import FeedbackBanner from "@/components/FeedbackBanner"
 import PaystubStep from "@/components/PaystubStep"
 import StepCard from "@/components/StepCard"
@@ -75,7 +76,15 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
               onSort={(billId, to) => dispatch({ type: "sortBill", billId, to })}
             />
           )}
-          {(step === "house" || step === "event") && (
+          {step === "house" && (
+            <HouseStep
+              buyer={buyer}
+              selectedId={choices.houseId}
+              locked={stage === "feedback"}
+              onSelect={(houseId) => dispatch({ type: "chooseHouse", houseId })}
+            />
+          )}
+          {step === "event" && (
             <p className="text-sm text-muted-foreground">This step's interface is coming next.</p>
           )}
         </StepCard>
