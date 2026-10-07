@@ -1,5 +1,6 @@
-// Content that is used to teach the user about the concepts of DTI 
+// Content that is used to teach the user about the concepts of DTI
 import type { DtiZone, Ending, IncomeOption, StepId } from "@/game/types"
+import type { Mood } from "@/game/mood"
 
 export const DISCLAIMER =
   "Simplified for education: real lenders also count property taxes, insurance, and other factors. Not financial advice."
@@ -124,6 +125,15 @@ export const mayaReactions: Record<StepId, string> = {
   bills: "Wait, they don't count my groceries? I was worried for nothing.",
   house: "So the gauge is the lender's answer. Let me keep that in mind.",
   event: "Right, I'll keep the car wait until after I have the keys.",
+}
+
+export const mascotName = "Nesty"
+
+export const mascotLines: Record<Mood, string> = {
+  neutral: "Let's see what the lender says.",
+  happy: "Nice. That works.",
+  anxious: "Hmm... that's tight.",
+  sad: "Ooh. The lender won't like this.",
 }
 
 export const endings: Record<Ending, { title: string; summary: string; takeaway: string }> = {
