@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button"
+import Mascot from "@/components/Mascot"
 import { DISCLAIMER, endings, steps } from "@/data/content"
 import type { GameState } from "@/game/gameReducer"
 import { STEPS, getEnding, getStepRecaps, getTotalScore } from "@/game/gameReducer"
 import { formatMoney, formatPercent, getTakeHomeMonthly, leftoverCash, sumDebts } from "@/game/dti"
 import { POINTS_PER_STEP } from "@/game/scoring"
+import { endingMood } from "@/game/mood"
 
 type Props = { game: GameState; onRestart: () => void }
 
@@ -38,6 +40,9 @@ export default function ResultScreen({ game, onRestart }: Props) {
       <div className={`rounded border-2 p-6 ${endingBorder[ending]}`}>
         <p className="mb-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">Result</p>
         <h1 className="text-2xl font-bold">{e.title}</h1>
+        <div className="mt-4">
+          <Mascot mood={endingMood[ending]} />
+        </div>
         <p className="mt-2 text-muted-foreground">{e.summary}</p>
         <p className="mt-3 font-medium">{e.takeaway}</p>
         <div className="mt-4 flex flex-wrap gap-4 font-mono text-sm">

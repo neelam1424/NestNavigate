@@ -24,9 +24,10 @@ type Props = {
   dti: number
   active: boolean
   reportDti?: number
+  previewDti?: number
 }
 
-export default function DtiGauge({ dti, active, reportDti }: Props) {
+export default function DtiGauge({ dti, active, reportDti, previewDti }: Props) {
   const zone = getDtiZone(dti)
 
   return (
@@ -75,6 +76,16 @@ export default function DtiGauge({ dti, active, reportDti }: Props) {
             style={{ left: toPct(reportDti) }}
           />
         )}
+        {previewDti !== undefined && (
+          <div
+            aria-hidden="true"
+            className="absolute inset-y-0 w-0.5 -translate-x-1/2 opacity-50 transition-all motion-reduce:transition-none duration-500"
+            style={{
+              left: toPct(previewDti),
+              backgroundImage: "repeating-linear-gradient(to bottom, currentColor 0px, currentColor 3px, transparent 3px, transparent 6px)",
+            }}
+          />
+        )}
       </div>
 
       <div className="relative h-4 font-mono text-xs text-muted-foreground">
@@ -85,6 +96,11 @@ export default function DtiGauge({ dti, active, reportDti }: Props) {
       {reportDti !== undefined && (
         <p className="font-mono text-xs text-muted-foreground">
           Faint mark: credit report reads {formatPercent(reportDti)}
+        </p>
+      )}
+      {previewDti !== undefined && (
+        <p className="font-mono text-xs text-muted-foreground">
+          Dashed marker: what this would do ({formatPercent(previewDti)})
         </p>
       )}
 

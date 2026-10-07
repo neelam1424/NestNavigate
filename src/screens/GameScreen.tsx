@@ -1,9 +1,11 @@
 import type { Dispatch } from "react"
 import BillsStep from "@/components/BillsStep"
+import CoachTip from "@/components/CoachTip"
 import DtiGauge from "@/components/DtiGauge"
 import EventStep from "@/components/EventStep"
 import FeedbackBanner from "@/components/FeedbackBanner"
 import HouseStep from "@/components/HouseStep"
+import Mascot from "@/components/Mascot"
 import PaystubStep from "@/components/PaystubStep"
 import StepCard from "@/components/StepCard"
 import StepControls from "@/components/StepControls"
@@ -15,6 +17,8 @@ import {
 } from "@/game/gameReducer"
 import { getFeedback } from "@/game/feedback"
 import { isStepAnswered } from "@/game/rules"
+import { getCoachTip } from "@/game/coach"
+import { getMood } from "@/game/mood"
 
 type Props = {
   game: GameState
@@ -37,6 +41,7 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
   }
 
   const feedback = stage === "feedback" ? getFeedback(step, buyer, choices) : null
+  const coachTip = getCoachTip(game)
 
   const gaugeDti = step === "bills" ? getBillsStepDti(game) : getLiveDti(game)
   const gaugeReportDti = step === "bills" ? getBillsStepReportDti(game) : undefined
@@ -93,6 +98,8 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
             />
           )}
 
+          {coachTip && <CoachTip tip={coachTip} />}
+
           <StepControls
             stage={stage}
             correct={lastCorrect}
@@ -108,6 +115,7 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
 
         <aside className="space-y-4 md:sticky md:top-6 md:self-start">
           <DtiGauge dti={gaugeDti} active={gaugeActive} reportDti={gaugeReportDti} />
+          <Mascot mood={getMood(game)} />
         </aside>
       </main>
 
