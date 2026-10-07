@@ -4,7 +4,7 @@ import { isStepAnswered, isStepCorrect } from "@/game/rules"
 import { pointsForStep } from "@/game/scoring"
 
 export const STEPS: StepId[] = ["income", "bills", "house", "event"]
-const CAN_GIVE_UP: StepId[] = ["house", "event"] // steps where denial is the consequence
+export const CAN_GIVE_UP: StepId[] = ["house", "event"] // steps where denial is the consequence
 export const COMFORT_CASH = 1000
 
 export type GameState = {
@@ -127,3 +127,7 @@ export function getEnding(s: GameState): Ending | null {
   const extra = s.choices.eventAccepted ? s.buyer.lifeEvents[0].debtDelta : 0
   return leftoverCash(s.buyer, housing, extra) >= COMFORT_CASH ? "comfortable" : "house-poor"
 }
+
+/** True once the player has made a choice that moves the gauge. */
+export const hasGaugeData = (s: GameState) =>
+  Object.keys(s.choices.billSort).length > 0 || s.choices.houseId !== null
