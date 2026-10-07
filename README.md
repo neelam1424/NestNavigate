@@ -20,7 +20,9 @@
 ## How to Run Locally
 [Setup instructions — npm install, npm run dev, etc.]
 ## Tech Choices
-[Brief note on any libraries or tools you chose and why]
+Vite
+Shadcn
+
 ## What I'd Do With More Time
 [Honest reflection — what's missing, what you'd build next]
 ## Known Issues
