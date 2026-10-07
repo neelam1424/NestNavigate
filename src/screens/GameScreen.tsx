@@ -9,7 +9,7 @@ import PaystubStep from "@/components/PaystubStep"
 import StepCard from "@/components/StepCard"
 import StepControls from "@/components/StepControls"
 import StepTracker from "@/components/StepTracker"
-import { steps } from "@/data/content"
+import { mayaReactions, steps } from "@/data/content"
 import type { Action, GameState } from "@/game/gameReducer"
 import {
   CAN_GIVE_UP, STEPS, getBillsStepDti, getBillsStepReportDti,
@@ -101,6 +101,7 @@ export default function GameScreen({ game, dispatch, onFinish }: Props) {
             correct={!!lastCorrect}
             text={feedback.text}
             hint={lastCorrect ? undefined : steps[step].hint}
+            mayaReaction={lastCorrect ? mayaReactions[step] : undefined}
           />
         )}
 

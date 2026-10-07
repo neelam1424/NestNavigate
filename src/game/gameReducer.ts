@@ -132,6 +132,63 @@ export function getEnding(s: GameState): Ending | null {
 export const hasGaugeData = (s: GameState) =>
   Object.keys(s.choices.billSort).length > 0 || s.choices.houseId !== null
 
+export type StepRecap = {
+  step: StepId
+  decision: string
+  dtiAfter: number
+}
+
+/** Builds a per-step summary for the result screen. Requires the game to be finished. */
+export function getStepRecaps(s: GameState): StepRecap[] {
+  const { buyer, choices } = s
+  const gross = getGrossMonthly(buyer)
+  const debt = sumDebts(buyer.bills)
+  const house = buyer.houses.find((h) => h.id === choices.houseId)
+  const event = buyer.lifeEvents[0]
+
+  const incomeLabels: Record<string, string> = {
+    grossMonthly: "Gross monthly income",
+    takeHome: "Monthly take-home pay",
+    annual: "Annual salary",
+  }
+
+  const recaps: StepRecap[] = [
+    {
+      step: "income",
+      decision: choices.income
+        ? `Used ${incomeLabels[choices.income]} ($${gross.toLocaleString()}/mo)`
+        : "No income selected",
+      dtiAfter: calcDti(debt, house?.housingPayment ?? 0, gross),
+    },
+    {
+      step: "bills",
+      decision: `Sorted all ${buyer.bills.length} bills. Counted debt: $${debt}/mo`,
+      dtiAfter: calcDti(debt, house?.housingPayment ?? 0, gross),
+    },
+  ]
+
+  if (house) {
+    recaps.push({
+      step: "house",
+      decision: `Chose ${house.name} at $${house.housingPayment}/mo`,
+      dtiAfter: calcDti(debt, house.housingPayment, gross),
+    })
+  }
+
+  if (choices.eventAccepted !== null && house) {
+    const extra = choices.eventAccepted ? event.debtDelta : 0
+    recaps.push({
+      step: "event",
+      decision: choices.eventAccepted
+        ? `Financed the car now (+$${event.debtDelta}/mo)`
+        : "Waited until after closing",
+      dtiAfter: calcDti(debt + extra, house.housingPayment, gross),
+    })
+  }
+
+  return recaps
+}
+
 /**
  * Bills step: DTI using what the player has sorted as "counts" plus Home A's payment.
  * Shown as the live marker on the gauge while the player is sorting.

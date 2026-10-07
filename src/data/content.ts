@@ -119,6 +119,13 @@ export const eventFeedback = {
   },
 }
 
+export const mayaReactions: Record<StepId, string> = {
+  income: "Ok, so the lender uses what I earn before taxes. Good to know.",
+  bills: "Wait, they don't count my groceries? I was worried for nothing.",
+  house: "So the gauge is the lender's answer. Let me keep that in mind.",
+  event: "Right, I'll keep the car wait until after I have the keys.",
+}
+
 export const endings: Record<Ending, { title: string; summary: string; takeaway: string }> = {
   comfortable: {
     title: "Approved and comfortable",
