@@ -1,75 +1,27 @@
-# React + TypeScript + Vite
+## Game Concept
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Can You Afford This House?
 
-Currently, two official plugins are available:
+> *Lenders don't ask if you love the house. They ask if the numbers fit.*
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Concept:** This game teaches **debt-to-income ratio (DTI)**: the share of gross (pre-tax) monthly income that goes to debt payments, including the new housing payment. The player helps Maya, a fictional first-time buyer.
 
-## React Compiler
+**Mechanic:** The player sits at Maya's kitchen table, a flat, hand-drawn 2D scene (not VR-style), and clicks papers in order. The paystub comes first: gross pay, taxes withheld, take-home pay (fixed numbers, no calculator). Next they sort bills into "lender counts" or "ignored," pick one of three homes, and respond to a life event like a new car loan. A live DTI gauge reacts to every move. A bad choice isn't marked "incorrect"; it plays out as a red gauge and a declined loan. A hint then nudges the player to rethink, and they can rewind and try again.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Scoring:** Four steps are worth 25 points each: a first-try success earns all 25, and each rewind costs 10 (minimum 5). A step tracker shows progress; the result screen shows the score and one of three endings: approved and comfortable, house-poor, or denied.
 
-## Expanding the ESLint configuration
+**Learning outcome:** Players learn gross versus take-home pay, which debts lenders count, the DTI formula, and thresholds (under 36% comfortable, 36–43% stretching, over 43% hard to approve). They also learn approval isn't affordability, and new debt before closing can jeopardize approval.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+**Why it's fun:** Every click moves the gauge, so players experiment and predict instead of memorizing. The tension is a tradeoff: the biggest house a lender approves may leave Maya almost no cash, and a surprise life event can undo a good choice. Three endings and a score to beat invite replays.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+*Simplified for education: real lenders also count property taxes, insurance, and other factors. Not financial advice.*
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
-
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+## How to Run Locally
+[Setup instructions — npm install, npm run dev, etc.]
+## Tech Choices
+[Brief note on any libraries or tools you chose and why]
+## What I'd Do With More Time
+[Honest reflection — what's missing, what you'd build next]
+## Known Issues
+[Any bugs or edge cases you're aware of]
