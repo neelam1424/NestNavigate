@@ -16,9 +16,14 @@ const zoneLabel: Record<DtiZone, string> = {
   hard: "Hard to approve",
 }
 
-type Props = { dti: number; active: boolean }
+type Props = {
+  dti: number
+  active: boolean
+  /** Optional second marker showing what the lender will find on the credit report. */
+  reportDti?: number
+}
 
-export default function DtiGauge({ dti, active }: Props) {
+export default function DtiGauge({ dti, active, reportDti }: Props) {
   const zone = getDtiZone(dti)
 
   return (
@@ -55,12 +60,25 @@ export default function DtiGauge({ dti, active }: Props) {
             style={{ left: toPct(dti) }}
           />
         )}
+        {reportDti !== undefined && (
+          <div
+            aria-label={`Credit report DTI: ${formatPercent(reportDti)}`}
+            className="absolute inset-y-0 w-0.5 -translate-x-1/2 bg-foreground/40 transition-all duration-500"
+            style={{ left: toPct(reportDti) }}
+          />
+        )}
       </div>
 
       <div className="relative h-4 text-xs text-muted-foreground">
         <span className="absolute -translate-x-1/2" style={{ left: toPct(COMFORT_LIMIT) }}>36%</span>
         <span className="absolute -translate-x-1/2" style={{ left: toPct(APPROVAL_LIMIT) }}>43%</span>
       </div>
+
+      {reportDti !== undefined && (
+        <p className="text-xs text-muted-foreground">
+          Faint line: lender's credit report reads {formatPercent(reportDti)}.
+        </p>
+      )}
 
       {!active && (
         <p className="text-sm text-muted-foreground">The gauge fills in as you make choices.</p>

@@ -1,5 +1,5 @@
 import type { BillSort, Buyer, Choices, Ending, IncomeOption, StepId } from "@/game/types"
-import { calcDti, getGrossMonthly, leftoverCash, sum } from "@/game/dti"
+import { calcDti, getGrossMonthly, leftoverCash, sum, sumDebts } from "@/game/dti"
 import { isStepAnswered, isStepCorrect } from "@/game/rules"
 import { pointsForStep } from "@/game/scoring"
 
@@ -131,3 +131,23 @@ export function getEnding(s: GameState): Ending | null {
 /** True once the player has made a choice that moves the gauge. */
 export const hasGaugeData = (s: GameState) =>
   Object.keys(s.choices.billSort).length > 0 || s.choices.houseId !== null
+
+/**
+ * Bills step: DTI using what the player has sorted as "counts" plus Home A's payment.
+ * Shown as the live marker on the gauge while the player is sorting.
+ */
+export function getBillsStepDti(s: GameState): number {
+  const { buyer, choices } = s
+  const sortedDebt = sum(buyer.bills.filter((b) => choices.billSort[b.id] === "counts").map((b) => b.amount))
+  const homeA = buyer.houses[0]
+  return calcDti(sortedDebt, homeA.housingPayment, getGrossMonthly(buyer))
+}
+
+/**
+ * Bills step: DTI using the actual debts from the credit report plus Home A's payment.
+ * Shown as the fixed "report" marker so the player sees what the lender will find.
+ */
+export function getBillsStepReportDti(s: GameState): number {
+  const homeA = s.buyer.houses[0]
+  return calcDti(sumDebts(s.buyer.bills), homeA.housingPayment, getGrossMonthly(s.buyer))
+}
