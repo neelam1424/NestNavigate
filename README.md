@@ -24,6 +24,7 @@ npm run dev
 ```
 
 Open `http://localhost:5173` in a browser.
+Deployed URL `https://nestnavigate-production.up.railway.app/` 
 
 ```bash
 npm test        # run the test suite
@@ -41,14 +42,13 @@ npm run build   # production build
 
 ## What I'd Do With More Time
 
-- **Dynamic tax brackets** -- the withholdings are fixed fictional numbers. A real paystub step would show how tax bracket affects take-home and DTI.
-- **Property tax and insurance in the housing payment** -- real lenders add PITI (principal, interest, taxes, insurance). The current calculation uses the payment alone, which is simpler to teach but understates real costs.
-- **More buyers and life events** -- `src/data/maya.ts` is designed for copy-paste: a second buyer with different income and debts would cover more scenarios without touching the game engine.
-- **Full accessibility audit** -- the gauge has `role="meter"` with ARIA value attributes and the feedback panel has `role="status"`. A complete screen-reader and keyboard-navigation review is still needed.
+- **Dynamic tax brackets** :- the withholdings are fixed fictional numbers. A real paystub step would show how tax bracket affects take-home and DTI.
+- **Property tax and insurance in the housing payment** :- real lenders add PITI (principal, interest, taxes, insurance). The current calculation uses the payment alone, which is simpler to teach but understates real costs.
+- **User can add income dynamically** :- `src/data/maya.ts` is designed for copy-paste: a second buyer with different income and debts would cover more scenarios without touching the game engine.
+- **Proper animation instead of guage** -- the gauge has `role="meter"` with ARIA value attributes and the feedback panel has `role="status"`. A complete screen-reader and keyboard-navigation review is still needed.
 - **Phaser 3 for drag-and-drop bills** -- the bills step would feel more tactile with real drag-and-drop. The plan: React owns all state, Phaser only renders the pile and fires `onBillDropped` events, the canvas is created in an effect and destroyed in cleanup for StrictMode safety. Skipped because the click-to-sort version was cleaner to ship on time.
 
 ## Known Issues
 
 - `npm audit` reports 7 high-severity findings, all in the `shadcn` CLI package and its build-time dependencies (`braces`, `micromatch`, `fast-glob`, `ts-morph`). These are not bundled into the production app. The suggested fix (`npm audit fix --force`) would downgrade `shadcn` to 1.0.0 which is a breaking change to the component generator; it does not affect the running game.
 - The life event step (step 4) assumes a house was chosen in step 3. If the game state is somehow reached without a house selection, the event component is not rendered and the step remains unanswered.
-- The slight rotation on `StepCard` uses small fixed angles. On screens narrower than 360px the rotated card may clip at the edge.
